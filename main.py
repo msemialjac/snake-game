@@ -50,8 +50,8 @@ class Food:
     def generate_new_position(self, snake_body, obstacles):
         while True:
             position = (
-                random.randint(0, GRID_WIDTH - 1),
-                random.randint(0, GRID_HEIGHT - 1),
+                random.randint(1, GRID_WIDTH - 2),
+                random.randint(1, GRID_HEIGHT - 2),
             )
             if position not in snake_body and position not in [
                 o.position for o in obstacles
@@ -114,7 +114,6 @@ class GameState:
             Obstacle(self.snake.body, self.food.position, self.obstacles)
             for _ in range(difficulty * 5)
         ]
-
 
 
 class SnakeGame:
@@ -226,7 +225,7 @@ class SnakeGame:
     def game_loop(self):
         running = True
         while running:
-            self.window.fill((0, 0, 0))
+            self.window.fill((52, 58, 64))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -270,7 +269,7 @@ class SnakeGame:
     def draw_game(self):
         pygame.draw.rect(
             self.window,
-            (255, 255, 255),
+            (0, 0, 0),
             (
                 self.frame_padding - 2,
                 self.frame_padding - 2,
