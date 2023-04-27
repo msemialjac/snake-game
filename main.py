@@ -8,6 +8,7 @@ WINDOW_SIZE = (800, 600)
 GRID_SIZE = 20
 GRID_WIDTH, GRID_HEIGHT = WINDOW_SIZE[0] // GRID_SIZE, WINDOW_SIZE[1] // GRID_SIZE
 SNAKE_COLORS = [(0, 255, 0), (0, 128, 255), (255, 255, 0), (255, 0, 128)]
+CELL_SIZE = 20
 
 
 class Snake:
@@ -115,11 +116,12 @@ class GameState:
         ]
 
 
+
 class SnakeGame:
     def __init__(self):
         pygame.init()
-        self.window = pygame.display.set_mode(WINDOW_SIZE)
-        pygame.display.set_caption("Snake Game")
+        sg.theme("DarkAmber")
+
         self.clock = pygame.time.Clock()
         self.game_state = GameState()
         self.difficulty = 1
@@ -129,12 +131,29 @@ class SnakeGame:
         self.games_played = 0
         self.high_scores = []
 
+        self.frame_padding = 20
+        self.info_padding = 120
+        self.window_width = GRID_WIDTH * CELL_SIZE + self.frame_padding * 2
+        self.window_height = (
+            GRID_HEIGHT * CELL_SIZE + self.frame_padding * 2 + self.info_padding
+        )
+        self.window = pygame.display.set_mode((self.window_width, self.window_height))
+
+        pygame.display.set_caption("Snake Game")
+
     def main_menu(self):
         layout = [
-            [sg.Text("Snake Game", size=(30, 1), font=("Helvetica", 25), justification="center")],
+            [
+                sg.Text(
+                    "Snake Game",
+                    size=(30, 1),
+                    font=("Helvetica", 25),
+                    justification="center",
+                )
+            ],
             [sg.Text("Choose difficulty:")],
             [sg.Button(str(i)) for i in range(1, 6)],
-            [sg.Button("Exit")]
+            [sg.Button("Exit")],
         ]
         window = sg.Window("Snake Game", layout)
         while True:
@@ -150,13 +169,13 @@ class SnakeGame:
 
     def update_high_scores(self):
         new_score = {
-            'play_no': self.games_played,
-            'score': self.score,
-            'rank': self.rank,
-            'level': self.difficulty
+            "play_no": self.games_played,
+            "score": self.score,
+            "rank": self.rank,
+            "level": self.difficulty,
         }
         self.high_scores.append(new_score)
-        self.high_scores.sort(key=lambda x: x['score'], reverse=True)
+        self.high_scores.sort(key=lambda x: x["score"], reverse=True)
 
     def new_game(self):
         self.game_state.new_game(self.difficulty)
@@ -170,18 +189,28 @@ class SnakeGame:
         self.update_high_scores()
 
         layout = [
-            [sg.Text(f"Game Over! This was your {self.games_played}. attempt", size=(30, 1), font=("Helvetica", 25),
-                     justification="center")],
+            [
+                sg.Text(
+                    f"Game Over! This was your {self.games_played}. attempt",
+                    size=(30, 1),
+                    font=("Helvetica", 25),
+                    justification="center",
+                )
+            ],
             [sg.Text("High Scores:")],
         ]
 
         for i, score in enumerate(self.high_scores[:5], 1):
-            layout.append([sg.Text(
-                f"{i}. Play no. {score['play_no']}   Scored points: {score['score']} Rank: {score['rank']} Level: {score['level']}")])
+            layout.append(
+                [
+                    sg.Text(
+                        f"{i}. Play no. {score['play_no']}   Scored points: {score['score']} Rank: {score['rank']} "
+                        f"Level: {score['level']}"
+                    )
+                ]
+            )
 
-        layout.extend([
-            [sg.Button("Main Menu"), sg.Button("Exit")]
-        ])
+        layout.extend([[sg.Button("Main Menu"), sg.Button("Exit")]])
 
         window = sg.Window("Game Over", layout)
         while True:
@@ -193,7 +222,6 @@ class SnakeGame:
                 window.close()
                 pygame.quit()
                 break
-
 
     def game_loop(self):
         running = True
@@ -233,8 +261,6 @@ class SnakeGame:
             pygame.display.update()
             self.clock.tick(10)
 
-
-
     def update_score(self):
         elapsed_time = time.time() - self.start_time
         food_eaten = len(self.game_state.snake.body) - 1
@@ -242,6 +268,17 @@ class SnakeGame:
         self.rank = 1 + food_eaten // 5
 
     def draw_game(self):
+        pygame.draw.rect(
+            self.window,
+            (255, 255, 255),
+            (
+                self.frame_padding - 2,
+                self.frame_padding - 2,
+                GRID_WIDTH * CELL_SIZE + 4,
+                GRID_HEIGHT * CELL_SIZE + 4,
+            ),
+            2,
+        )
         font = pygame.font.Font(None, 36)
         score_text = font.render(f"Score: {self.score}", True, (255, 255, 255))
         time_text = font.render(
@@ -249,9 +286,15 @@ class SnakeGame:
         )
         rank_text = font.render(f"Rank: {self.rank}", True, (255, 255, 255))
 
-        self.window.blit(score_text, (10, 10))
-        self.window.blit(time_text, (10, 50))
-        self.window.blit(rank_text, (10, 90))
+        self.window.blit(
+            score_text, (10, GRID_HEIGHT * CELL_SIZE + self.frame_padding * 2)
+        )
+        self.window.blit(
+            time_text, (10, GRID_HEIGHT * CELL_SIZE + self.frame_padding * 2 + 40)
+        )
+        self.window.blit(
+            rank_text, (10, GRID_HEIGHT * CELL_SIZE + self.frame_padding * 2 + 80)
+        )
 
     def check_collision(self):
         head = self.game_state.snake.body[0]
