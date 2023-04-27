@@ -129,31 +129,6 @@ class SnakeGame:
         self.games_played = 0
         self.high_scores = []
 
-    # def main_menu(self):
-    #     layout = [
-    #         [sg.Text("Snake Game", size=(30, 1), font=("Helvetica", 25), justification="center")],
-    #         [sg.Text("Choose difficulty (1-5):"), sg.InputText()],
-    #         [sg.Button("Start Game"), sg.Button("Exit")]
-    #     ]
-    #     window = sg.Window("Snake Game", layout)
-    #     while True:
-    #         event, values = window.read()
-    #         if event == "Start Game":
-    #             try:
-    #                 difficulty = int(values[0])
-    #                 if 1 <= difficulty <= 5:
-    #                     self.difficulty = difficulty
-    #                     window.close()
-    #                     self.new_game()
-    #                 else:
-    #                     sg.Popup("Invalid difficulty. Please enter a number between 1 and 5.")
-    #             except ValueError:
-    #                 sg.Popup("Invalid input. Please enter a number between 1 and 5.")
-    #         elif event == sg.WIN_CLOSED or event == "Exit":
-    #             window.close()
-    #             pygame.quit()
-    #             break
-
     def main_menu(self):
         layout = [
             [sg.Text("Snake Game", size=(30, 1), font=("Helvetica", 25), justification="center")],
@@ -219,29 +194,6 @@ class SnakeGame:
                 pygame.quit()
                 break
 
-    # def game_over(self):
-    #     self.games_played += 1
-    #
-    #     layout = [
-    #         [sg.Text(f"Game Over! (Play no. {self.games_played})", size=(30, 1), font=("Helvetica", 25),
-    #                  justification="center")],
-    #         [sg.Text(f"Score: {self.score}")],
-    #         [sg.Text(f"Time: {int(time.time() - self.start_time)}")],
-    #         [sg.Text(f"Rank: {self.rank}")],
-    #         [sg.Button("New Game"), sg.Button("Exit")]
-    #     ]
-    #
-    #     window = sg.Window("Game Over", layout)
-    #     while True:
-    #         event, values = window.read()
-    #         if event == "New Game":
-    #             self.difficulty = (self.difficulty % 5) + 1
-    #             window.close()
-    #             self.new_game()
-    #         elif event == sg.WIN_CLOSED or event == "Exit":
-    #             window.close()
-    #             pygame.quit()
-    #             break
 
     def game_loop(self):
         running = True
