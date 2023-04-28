@@ -300,10 +300,10 @@ class SnakeGame:
 
         # Check if the snake collides with the window borders
         if (
-            head[0] < 0
-            or head[0] >= GRID_WIDTH
-            or head[1] < 0
-            or head[1] >= GRID_HEIGHT
+            head[0] < 1
+            or head[0] >= GRID_WIDTH + 1
+            or head[1] < 1
+            or head[1] >= GRID_HEIGHT + 1
         ):
             return True
 
